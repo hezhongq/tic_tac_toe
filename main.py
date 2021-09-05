@@ -10,15 +10,16 @@ class Player:
 
     def move(self, b):
         # asks user for x-y coordinates
-        row = int(input("Please enter the row of your move"))
-        col = int(input("Please enter the column of your move"))
-        # while loop
-        while not (0 <= row < BOARD_SIZE) or not (0 <= col < BOARD_SIZE) or b.board[row][col] != " ":
+
+        row = input("Please enter the row of your move： ")
+        col = input("Please enter the column of your move： ")
+
+        while not (row.isnumeric() and col.isnumeric()) or not (0 <= int(row) < BOARD_SIZE) or not (0 <= int(col) < BOARD_SIZE) or b.board[int(row)][int(col)] != " ":
             print("Invalid input, please try again.")
-            row = int(input("Please enter the row of your move"))
-            col = int(input("Please enter the column of your move"))
+            row = input("Please enter the row of your move： ")
+            col = input("Please enter the column of your move： ")
         # update board
-        b.board[row][col] = self.name
+        b.board[int(row)][int(col)] = self.name
         b.count += 1
 
 
@@ -60,19 +61,19 @@ def check_winner(b, player):
     :return: return True if current player win
     """
     # check horizontal
-    if b.board[0][0] == b.board[0][1] == b.board[0][2] == curr_player or \
-            b.board[1][0] == b.board[1][1] == b.board[1][2] == curr_player or \
-            b.board[2][0] == b.board[2][1] == b.board[2][2] == curr_player:
-        return curr_player
+    if b.board[0][0] == b.board[0][1] == b.board[0][2] == player or \
+            b.board[1][0] == b.board[1][1] == b.board[1][2] == player or \
+            b.board[2][0] == b.board[2][1] == b.board[2][2] == player:
+        return player
     # check vertical
-    elif b.board[0][1] == b.board[1][1] == b.board[2][1] == curr_player or \
-            b.board[0][0] == b.board[1][0] == b.board[2][0] == curr_player or \
-            b.board[0][2] == b.board[1][2] == b.board[2][2] == curr_player:
-        return curr_player
+    elif b.board[0][1] == b.board[1][1] == b.board[2][1] == player or \
+            b.board[0][0] == b.board[1][0] == b.board[2][0] == player or \
+            b.board[0][2] == b.board[1][2] == b.board[2][2] == player:
+        return player
     # check diagonal
-    elif b.board[0][0] == b.board[1][1] == b.board[2][2] == curr_player or \
-            b.board[0][2] == b.board[1][1] == b.board[2][0] == curr_player:
-        return curr_player
+    elif b.board[0][0] == b.board[1][1] == b.board[2][2] == player or \
+            b.board[0][2] == b.board[1][1] == b.board[2][0] == player:
+        return player
     return False
 
 
@@ -91,26 +92,28 @@ if '__main__' == __name__:
     c = 0
     curr_player = p1
 
+    # temp = Board()
+    # temp.board = [["O", "X", "O"], ["X", " X", "O"], ["O", "X", " "]]
+    # winner = Player("X")
+    # print(check_winner(temp, winner))
+
     while True:
+        curr_player.move(b)
+        b.display_board()
         if check_full(b):
             print("Tie!")
             break
 
-        rtn = check_winner(b, curr_player)
+        rtn = check_winner(b, curr_player.name)
         if rtn is not False:
             print("the winner is {}".format(rtn))
             break
 
-        curr_player.move(b)
-        b.display_board()
-        if c % 2 == 0:
+        if curr_player is p1:
             curr_player = p2
-            c = 1
         else:
             curr_player = p1
-            c = 0
 
-    print("done!")
 
 
 
